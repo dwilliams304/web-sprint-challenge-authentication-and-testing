@@ -28,7 +28,7 @@ const checkUsernameFree = async (req, res, next) => {
 
 const checkUsernameExists = async (req, res, next) => {
     const [existing] = await Users.findBy({username: req.vld_username})
-    if(!existing) next({status: 401, message: 'username taken'})
+    if(!existing) next({status: 401, message: 'invalid credentials'})
     else {
         req.user = existing;
         next();

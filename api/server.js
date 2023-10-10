@@ -19,7 +19,7 @@ server.use('/api/jokes', restrict, jokesRouter); // only logged-in users should 
 //Error catcher
 server.use((err, req, res, next) => { //eslint-disable-line
     res.status(err.status || 500).json({
-        response: 'Ouch!',
+        details: `Error with [${req.method}] to url: ${req.originalUrl}`,
         message: err.message,
         stack: err.stack
     })
