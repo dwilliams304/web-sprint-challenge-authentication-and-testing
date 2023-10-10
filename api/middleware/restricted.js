@@ -1,4 +1,6 @@
-module.exports = (req, res, next) => {
+const jwt = require('jsonwebtoken');
+
+const restricted = (req, res, next) => {
   next();
   /*
     IMPLEMENT
@@ -12,3 +14,5 @@ module.exports = (req, res, next) => {
       the response body should include a string exactly as follows: "token invalid".
   */
 };
+
+module.exports = restricted;

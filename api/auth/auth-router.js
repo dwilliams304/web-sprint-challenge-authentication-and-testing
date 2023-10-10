@@ -1,6 +1,10 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-router.post('/register', (req, res) => {
+const { validatePayload, checkUsernameFree, checkUsernameExists } = require('./auth-middleware');
+
+router.post('/register', validatePayload, checkUsernameFree, (req, res) => {
   res.end('implement register, please!');
   /*
     IMPLEMENT
@@ -29,7 +33,7 @@ router.post('/register', (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', checkUsernameExists, (req, res) => {
   res.end('implement login, please!');
   /*
     IMPLEMENT
