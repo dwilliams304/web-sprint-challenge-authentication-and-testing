@@ -13,22 +13,26 @@ const validatePayload = (req, res, next) => {
         next({status: 422, message: 'username and password required'})
     }
     else{
-        req.user = {username: req.body.username.trim(), password: req.body.password.trim()}
+        req.vld_password = req.body.password.trim()
+        req.vld_username = req.body.username.trim()
         next();
     }
 }
 
 
 const checkUsernameFree = async (req, res, next) => {
-    const [exists] = await Users.findBy({username: req.user.username});
+    const [exists] = await Users.findBy({username: req.vld_username});
     if(exists) next({status: 401, message: 'username taken'})
     else next();
 }
 
 const checkUsernameExists = async (req, res, next) => {
-    const doesExist = await Users.findBy({username: req.user.username})
-    if(!doesExist) next({status: 401, message: 'username taken'})
-    else next();
+    const [existing] = await Users.findBy({username: req.vld_username})
+    if(!existing) next({status: 401, message: 'username taken'})
+    else {
+        req.user = existing;
+        next();
+    }
 }
 
 
