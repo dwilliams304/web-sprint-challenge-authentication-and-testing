@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Users = require('../users/users-model');
 
 const { validatePayload, checkUsernameFree, checkUsernameExists } = require('./auth-middleware');
 
-router.post('/register', validatePayload, checkUsernameFree, (req, res) => {
-  res.end('implement register, please!');
+router.post('/register', validatePayload, checkUsernameFree, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -31,10 +31,15 @@ router.post('/register', validatePayload, checkUsernameFree, (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
+      const {username, password} = req.user;
+      const hash = bcrypt.hashSync(password, 8);
+      Users.add({username, password: hash})
+        .then(newUser => res.status(201).json(newUser))
+        .catch(next);
+      
 });
 
-router.post('/login', checkUsernameExists, (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', validatePayload, checkUsernameExists, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -58,6 +63,7 @@ router.post('/login', checkUsernameExists, (req, res) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
+      const {username, password} = req.user;
 });
 
 module.exports = router;
